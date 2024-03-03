@@ -9,7 +9,9 @@ from pathlib import Path
 
 normalized_filepath = lambda filepath: str(Path(filepath).absolute())
 
-commandline_args = os.environ.get('COMMANDLINE_ARGS', "")
+commandline_args = os.environ.get('COMMANDLINE_ARGS', "--xformers")
+# commandline_args = os.environ.get('COMMANDLINE_ARGS', "")
+
 sys.argv += shlex.split(commandline_args)
 
 cwd = os.getcwd()
