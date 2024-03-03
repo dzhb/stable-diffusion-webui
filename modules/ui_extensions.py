@@ -11,6 +11,7 @@ import html
 import shutil
 import errno
 
+import ProxyConfig
 from modules import extensions, shared, paths, config_states, errors, restart
 from modules.paths_internal import config_states_dir
 from modules.call_queue import wrap_gradio_gpu_call
@@ -407,8 +408,14 @@ def refresh_available_extensions(url, hide_tags, sort_column):
     global available_extensions
 
     import urllib.request
-    with urllib.request.urlopen(url) as response:
-        text = response.read()
+    if ProxyConfig.use_proxy:
+        proxy_handler = urllib.request.ProxyHandler(ProxyConfig.proxys)
+        opener = urllib.request.build_opener(proxy_handler)
+        with opener.open(url) as response:
+            text = response.read()
+    else:
+        with urllib.request.urlopen(url) as response:
+            text = response.read()
 
     available_extensions = json.loads(text)
 
